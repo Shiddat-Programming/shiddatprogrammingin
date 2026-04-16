@@ -286,17 +286,27 @@ async function seedData() {
     }
 
     // Seed Admin User
-    const adminExists = await User.findOne({ role: 'admin' });
+    const adminEmail = "admin@shiddat.institute";
+    const adminExists = await User.findOne({ email: adminEmail });
     if (!adminExists) {
+      console.log("Creating default admin user...");
       const hashedPassword = await bcrypt.hash("Shiddat@2026", 10);
       await User.create({
         name: "Shiddat Admin",
-        email: "admin@shiddat.institute",
+        email: adminEmail,
         password: hashedPassword,
         role: "admin",
         hasCourseAccess: true
       });
-      console.log("🌱 Default Admin created: admin@shiddat.institute / Shiddat@2026");
+      console.log(`🌱 Default Admin created: ${adminEmail} / Shiddat@2026`);
+    } else {
+      console.log(`Admin user already exists: ${adminEmail}`);
+      // Ensure the existing user has the admin role
+      if (adminExists.role !== 'admin') {
+        adminExists.role = 'admin';
+        await adminExists.save();
+        console.log(`Updated role to admin for: ${adminEmail}`);
+      }
     }
 
     // Seed Default Homepage

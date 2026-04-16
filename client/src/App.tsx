@@ -459,7 +459,7 @@ const Hero = ({ content, onRegister, setView }: any) => (
         {/* Sticker */}
         <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-rose-500 to-indigo-600 text-white rounded-full text-sm font-black uppercase tracking-widest shadow-lg shadow-rose-200 animate-bounce-slow">
           <Sparkles size={16} />
-          Offline-Online Training
+          {content?.sticker || 'Offline-Online Training'}
         </div>
 
         {/* Main Title / Tagline */}
@@ -484,13 +484,13 @@ const Hero = ({ content, onRegister, setView }: any) => (
             onClick={() => setView('courses')}
             className="bg-rose-600 text-white px-10 py-5 rounded-2xl text-lg font-black shadow-xl shadow-rose-200 hover:bg-rose-700 transition-all active:scale-95 flex items-center gap-2"
           >
-            {content?.primaryCTA?.text || 'Explore Courses'} <ChevronRight size={20} />
+            {content?.primaryCtaText || 'Explore Courses'} <ChevronRight size={20} />
           </button>
           <button 
             onClick={onRegister}
             className="bg-white text-slate-900 border-2 border-slate-200 px-10 py-5 rounded-2xl text-lg font-black shadow-lg hover:bg-slate-50 hover:border-indigo-200 transition-all active:scale-95 flex items-center gap-2"
           >
-            {content?.secondaryCTA?.text || 'Join Free Trial'} <Target size={20} className="text-indigo-600" />
+            {content?.secondaryCtaText || 'Join Free Trial'} <Target size={20} className="text-indigo-600" />
           </button>
         </div>
         
@@ -509,7 +509,7 @@ const Hero = ({ content, onRegister, setView }: any) => (
               +1k
             </div>
           </div>
-          <p className="text-base text-slate-600 font-bold">Trusted by 1000+ Students</p>
+          <p className="text-base text-slate-600 font-bold">{content?.trustText || 'Trusted by 1000+ Students'}</p>
         </div>
       </motion.div>
     </div>
@@ -609,14 +609,14 @@ const UpcomingBatches = ({ content }: any) => (
       <div className="grid lg:grid-cols-2 gap-20 items-center">
         <div className="space-y-8">
           <h2 className="text-5xl font-black leading-tight tracking-tight">
-            New Batches Starting <br />
-            <span className="text-indigo-200">Every Monday!</span>
+            {content?.title || 'New Batches Starting'} <br />
+            <span className="text-indigo-200">{content?.subtitle || 'Every Monday!'}</span>
           </h2>
           <p className="text-xl text-indigo-100 font-medium leading-relaxed">
-            Don't wait for the right time. The right time is now. Join our upcoming cohorts and start your IT journey.
+            {content?.description || "Don't wait for the right time. The right time is now. Join our upcoming cohorts and start your IT journey."}
           </p>
           <div className="space-y-4">
-            {['Morning Batch: 8:00 AM - 10:00 AM', 'Evening Batch: 6:00 PM - 8:00 PM', 'Weekend Special: Sat-Sun'].map(batch => (
+            {(content?.batches || ['Morning Batch: 8:00 AM - 10:00 AM', 'Evening Batch: 6:00 PM - 8:00 PM', 'Weekend Special: Sat-Sun']).map((batch: string) => (
               <div key={batch} className="flex items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
                 <div className="w-10 h-10 bg-white text-indigo-600 rounded-xl flex items-center justify-center">
                   <Calendar size={20} />
@@ -627,7 +627,7 @@ const UpcomingBatches = ({ content }: any) => (
           </div>
         </div>
         <div className="bg-white p-10 rounded-[48px] text-slate-900 shadow-2xl">
-          <h3 className="text-2xl font-black mb-8">Reserve Your Seat</h3>
+          <h3 className="text-2xl font-black mb-8">{content?.formTitle || 'Reserve Your Seat'}</h3>
           <form className="space-y-6">
             <div className="space-y-2">
               <label className="text-xs font-black uppercase tracking-widest text-slate-400">Full Name</label>
@@ -638,7 +638,7 @@ const UpcomingBatches = ({ content }: any) => (
               <input type="tel" className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none font-bold" placeholder="Enter your mobile number" />
             </div>
             <button className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
-              Get Free Counseling
+              {content?.buttonText || 'Get Free Counseling'}
             </button>
           </form>
         </div>
@@ -653,35 +653,35 @@ const OnlineOffline = ({ content }: any) => (
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <div className="relative">
           <img 
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1000" 
+            src={content?.imageUrl || "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1000"} 
             className="rounded-[48px] shadow-2xl"
             alt="Classroom"
             referrerPolicy="no-referrer"
           />
           <div className="absolute -top-8 -right-8 bg-rose-600 text-white p-8 rounded-[32px] shadow-2xl rotate-6">
-            <p className="text-4xl font-black mb-1">100%</p>
-            <p className="text-xs font-bold uppercase tracking-widest opacity-80">Practical Learning</p>
+            <p className="text-4xl font-black mb-1">{content?.badgeValue || '100%'}</p>
+            <p className="text-xs font-bold uppercase tracking-widest opacity-80">{content?.badgeText || 'Practical Learning'}</p>
           </div>
         </div>
         <div className="space-y-8">
           <h2 className="text-5xl font-black text-slate-900 tracking-tight leading-none">
-            Learn Anywhere, <br />
-            <span className="text-indigo-600">Anytime.</span>
+            {content?.title || 'Learn Anywhere,'} <br />
+            <span className="text-indigo-600">{content?.subtitle || 'Anytime.'}</span>
           </h2>
           <div className="grid sm:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
                 <Globe size={28} />
               </div>
-              <h4 className="text-xl font-black text-slate-900">Online Classes</h4>
-              <p className="text-slate-500 font-medium">Live interactive sessions with recorded backups for flexible learning.</p>
+              <h4 className="text-xl font-black text-slate-900">{content?.onlineTitle || 'Online Classes'}</h4>
+              <p className="text-slate-500 font-medium">{content?.onlineDesc || 'Live interactive sessions with recorded backups for flexible learning.'}</p>
             </div>
             <div className="space-y-4">
               <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center">
                 <MapPin size={28} />
               </div>
-              <h4 className="text-xl font-black text-slate-900">Offline Center</h4>
-              <p className="text-slate-500 font-medium">State-of-the-art lab facilities at our Karad center for hands-on practice.</p>
+              <h4 className="text-xl font-black text-slate-900">{content?.offlineTitle || 'Offline Center'}</h4>
+              <p className="text-slate-500 font-medium">{content?.offlineDesc || 'State-of-the-art lab facilities at our Karad center for hands-on practice.'}</p>
             </div>
           </div>
         </div>
@@ -694,18 +694,18 @@ const Gallery = ({ content }: any) => (
   <section className="py-32 bg-slate-50">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-20 space-y-4">
-        <h2 className="text-5xl font-black text-slate-900 tracking-tight">Life at Shiddat</h2>
-        <p className="text-slate-500 font-medium">Glimpses of our batches, celebrations, and learning environment.</p>
+        <h2 className="text-5xl font-black text-slate-900 tracking-tight">{content?.title || 'Life at Shiddat'}</h2>
+        <p className="text-slate-500 font-medium">{content?.description || 'Glimpses of our batches, celebrations, and learning environment.'}</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {[1,2,3,4,5,6,7,8].map(i => (
+        {(content?.images || [1,2,3,4,5,6,7,8]).map((img: any, i: number) => (
           <motion.div 
             key={i}
             whileHover={{ scale: 1.05, rotate: i % 2 === 0 ? 2 : -2 }}
             className="aspect-square rounded-3xl overflow-hidden shadow-lg border-4 border-white"
           >
             <img 
-              src={`https://picsum.photos/seed/shiddat-${i}/800/800`} 
+              src={typeof img === 'string' ? img : `https://picsum.photos/seed/shiddat-${img}/800/800`} 
               className="w-full h-full object-cover"
               alt="Gallery"
               referrerPolicy="no-referrer"
@@ -721,19 +721,19 @@ const Testimonials = ({ content }: any) => (
   <section className="py-32 bg-white">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-20 space-y-4">
-        <h2 className="text-5xl font-black text-slate-900 tracking-tight">Success Stories</h2>
-        <p className="text-slate-500 font-medium">Hear from our students who transformed their careers.</p>
+        <h2 className="text-5xl font-black text-slate-900 tracking-tight">{content?.title || 'Success Stories'}</h2>
+        <p className="text-slate-500 font-medium">{content?.description || 'Hear from our students who transformed their careers.'}</p>
       </div>
       <div className="grid md:grid-cols-3 gap-8">
-        {[
+        {(content?.testimonials || [
           { name: 'Amit Sharma', role: 'Full Stack Developer at Infosys', text: 'The MERN stack course was comprehensive and practical. The projects helped me build a strong portfolio.' },
           { name: 'Priya Patil', role: 'Data Scientist at Accenture', text: 'The Python and AI course gave me the skills I needed to transition into data science. Highly recommended!' },
           { name: 'Sameer Khan', role: 'Software Engineer at Wipro', text: 'Excellent teaching and great support. The placement assistance was crucial in landing my first job.' }
-        ].map((testimonial, i) => (
+        ]).map((testimonial: any, i: number) => (
           <div key={i} className="bg-slate-50 p-10 rounded-[40px] relative group hover:bg-indigo-600 transition-all duration-500">
             <Quote className="absolute top-8 right-8 text-indigo-100 group-hover:text-indigo-400 transition-colors" size={48} />
             <div className="flex items-center gap-4 mb-8">
-              <img src={`https://i.pravatar.cc/100?img=${i+15}`} className="w-16 h-16 rounded-2xl border-2 border-white shadow-lg" alt="Student" referrerPolicy="no-referrer" />
+              <img src={testimonial.image || `https://i.pravatar.cc/100?img=${i+15}`} className="w-16 h-16 rounded-2xl border-2 border-white shadow-lg" alt="Student" referrerPolicy="no-referrer" />
               <div>
                 <h4 className="font-black text-slate-900 group-hover:text-white transition-colors">{testimonial.name}</h4>
                 <p className="text-sm font-bold text-indigo-600 group-hover:text-indigo-200 transition-colors">{testimonial.role}</p>
@@ -853,13 +853,16 @@ const SectionEditor = ({ section, onSave, isNew, sectionTypes }: {
       case 'hero':
         return (
           <div className="space-y-4">
+            <Input label="Sticker" value={formData.content.sticker || ''} onChange={(v: string) => handleContentChange('sticker', v)} />
             <Input label="Main Heading" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
-            <TextArea label="Subtext" value={formData.content.subtitle || ''} onChange={(v: string) => handleContentChange('subtitle', v)} />
+            <Input label="Subtitle" value={formData.content.subtitle || ''} onChange={(v: string) => handleContentChange('subtitle', v)} />
+            <Input label="Tagline" value={formData.content.tagline || ''} onChange={(v: string) => handleContentChange('tagline', v)} />
+            <Input label="Highlight Text" value={formData.content.highlight || ''} onChange={(v: string) => handleContentChange('highlight', v)} />
             <div className="grid grid-cols-2 gap-4">
               <Input label="Primary Button Text" value={formData.content.primaryCtaText || ''} onChange={(v: string) => handleContentChange('primaryCtaText', v)} />
               <Input label="Secondary Button Text" value={formData.content.secondaryCtaText || ''} onChange={(v: string) => handleContentChange('secondaryCtaText', v)} />
             </div>
-            <Input label="Hero Image URL" value={formData.content.imageUrl || ''} onChange={(v: string) => handleContentChange('imageUrl', v)} />
+            <Input label="Trust Text" value={formData.content.trustText || ''} onChange={(v: string) => handleContentChange('trustText', v)} />
           </div>
         );
       case 'trust':
@@ -893,6 +896,72 @@ const SectionEditor = ({ section, onSave, isNew, sectionTypes }: {
                 } catch (e) {}
               }} 
             />
+          </div>
+        );
+      case 'placements':
+        return (
+          <div className="space-y-4">
+            <Input label="Section Title" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
+            <TextArea label="Description" value={formData.content.description || ''} onChange={(v: string) => handleContentChange('description', v)} />
+          </div>
+        );
+      case 'gallery':
+        return (
+          <div className="space-y-4">
+            <Input label="Section Title" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
+            <TextArea 
+              label="Images (One URL per line)" 
+              value={(formData.content.images || []).join('\n')} 
+              onChange={(v: string) => handleContentChange('images', v.split('\n').filter(url => url.trim()))} 
+            />
+          </div>
+        );
+      case 'batches':
+        return (
+          <div className="space-y-4">
+            <Input label="Section Title" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
+            <Input label="Subtitle" value={formData.content.subtitle || ''} onChange={(v: string) => handleContentChange('subtitle', v)} />
+            <TextArea label="Description" value={formData.content.description || ''} onChange={(v: string) => handleContentChange('description', v)} />
+            <Input label="Form Title" value={formData.content.formTitle || ''} onChange={(v: string) => handleContentChange('formTitle', v)} />
+            <Input label="Button Text" value={formData.content.buttonText || ''} onChange={(v: string) => handleContentChange('buttonText', v)} />
+            <TextArea 
+              label="Batches (One per line)" 
+              value={(formData.content.batches || []).join('\n')} 
+              onChange={(v: string) => handleContentChange('batches', v.split('\n').filter(b => b.trim()))} 
+            />
+          </div>
+        );
+      case 'testimonials':
+        return (
+          <div className="space-y-4">
+            <Input label="Section Title" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
+            <TextArea 
+              label="Testimonials (JSON Array)" 
+              value={JSON.stringify(formData.content.testimonials || [], null, 2)} 
+              onChange={(v: string) => {
+                try {
+                  handleContentChange('testimonials', JSON.parse(v));
+                } catch (e) {}
+              }} 
+            />
+          </div>
+        );
+      case 'online-offline':
+        return (
+          <div className="space-y-4">
+            <Input label="Image URL" value={formData.content.imageUrl || ''} onChange={(v: string) => handleContentChange('imageUrl', v)} />
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Badge Value" value={formData.content.badgeValue || ''} onChange={(v: string) => handleContentChange('badgeValue', v)} />
+              <Input label="Badge Text" value={formData.content.badgeText || ''} onChange={(v: string) => handleContentChange('badgeText', v)} />
+            </div>
+            <Input label="Title" value={formData.content.title || ''} onChange={(v: string) => handleContentChange('title', v)} />
+            <Input label="Subtitle" value={formData.content.subtitle || ''} onChange={(v: string) => handleContentChange('subtitle', v)} />
+            <div className="grid grid-cols-2 gap-4">
+              <Input label="Online Title" value={formData.content.onlineTitle || ''} onChange={(v: string) => handleContentChange('onlineTitle', v)} />
+              <Input label="Offline Title" value={formData.content.offlineTitle || ''} onChange={(v: string) => handleContentChange('offlineTitle', v)} />
+            </div>
+            <TextArea label="Online Description" value={formData.content.onlineDesc || ''} onChange={(v: string) => handleContentChange('onlineDesc', v)} />
+            <TextArea label="Offline Description" value={formData.content.offlineDesc || ''} onChange={(v: string) => handleContentChange('offlineDesc', v)} />
           </div>
         );
       default:
@@ -954,18 +1023,39 @@ const PageBuilder = ({ page, onSave, onCancel }: { page: PageConfig, onSave: (p:
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (over && active.id !== over.id) {
       const oldIndex = formData.sections.findIndex((s: any, i: number) => (s.id || s._id || `section-${i}`) === active.id);
       const newIndex = formData.sections.findIndex((s: any, i: number) => (s.id || s._id || `section-${i}`) === over.id);
-      const newSections = arrayMove(formData.sections, oldIndex, newIndex).map((s: LandingPageSection, i: number) => ({ ...s, order: i }));
-      setFormData({ ...formData, sections: newSections });
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newSections = arrayMove(formData.sections, oldIndex, newIndex).map((s: LandingPageSection, i: number) => ({ ...s, order: i }));
+        setFormData({ ...formData, sections: newSections });
+      }
     }
   };
 
   const handleSaveSection = (section: LandingPageSection) => {
     let newSections;
-    if (formData.sections.find(s => (s.id || s._id) === (section.id || section._id))) {
-      newSections = formData.sections.map(s => (s.id || s._id) === (section.id || section._id) ? section : s);
+    const sectionId = section.id || section._id;
+    const existingIndex = formData.sections.findIndex(s => (s.id || s._id) === sectionId);
+    
+    // Ensure content is not empty for new sections
+    if (isAddingSection && Object.keys(section.content).length === 0) {
+      const defaultContents: any = {
+        hero: { title: 'Welcome to Shiddat', subtitle: 'Programming Institute', tagline: 'IT Software Training & AI Center', sticker: 'Offline-Online Training', highlight: 'Karad मधील IT Specialization चे एकमेव Center', primaryCtaText: 'Explore Courses', secondaryCtaText: 'Join Free Trial', trustText: 'Trusted by 1000+ Students' },
+        trust: { stats: [{ label: 'Students', value: '1000+' }, { label: 'Courses', value: '15+' }, { label: 'Mentors', value: '20+' }, { label: 'Partners', value: '100+' }] },
+        specialization: { title: 'Our Expertise', description: 'We focus on practical, project-based learning.', specs: [{ title: 'Full Stack', desc: 'Master MERN stack.', icon: 'Code' }] },
+        gallery: { title: 'Life at Shiddat', description: 'Glimpses of our batches.', images: [1, 2, 3, 4] },
+        batches: { title: 'New Batches Starting', subtitle: 'Every Monday!', description: "Join our upcoming cohorts.", batches: ['Morning Batch', 'Evening Batch'], formTitle: 'Reserve Your Seat', buttonText: 'Get Counseling' },
+        testimonials: { title: 'Success Stories', description: 'Hear from our students.', testimonials: [{ name: 'John Doe', role: 'Developer', text: 'Great experience!' }] },
+        'online-offline': { title: 'Learn Anywhere,', subtitle: 'Anytime.', onlineTitle: 'Online Classes', offlineTitle: 'Offline Center', onlineDesc: 'Live interactive sessions.', offlineDesc: 'Hands-on practice.', badgeValue: '100%', badgeText: 'Practical' }
+      };
+      section.content = defaultContents[section.type] || {};
+    }
+
+    if (existingIndex !== -1) {
+      newSections = [...formData.sections];
+      newSections[existingIndex] = section;
     } else {
       newSections = [...formData.sections, { ...section, order: formData.sections.length }];
     }
@@ -1231,7 +1321,9 @@ const MenuManager = () => {
         credentials: 'include'
       });
       if (res.ok) {
-        alert(`${menu.name} menu updated successfully!`);
+        // We can't easily use setNotification here if it's not passed down
+        // For now, let's just log it or we could pass a notify function
+        console.log(`${menu.name} menu updated successfully!`);
       }
     } catch (err) {
       console.error(err);
@@ -2057,6 +2149,14 @@ export default function App() {
   };
 
   const handleSavePage = async (page: PageConfig) => {
+    // Basic slug validation
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(page.slug)) {
+      setNotification({ message: 'Slug can only contain lowercase letters, numbers, and hyphens', type: 'error' });
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
+
     try {
       const url = page._id ? `${API_URL}/api/admin/pages/${page._id}` : `${API_URL}/api/admin/pages`;
       const method = page._id ? 'PUT' : 'POST';
