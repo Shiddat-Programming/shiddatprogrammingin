@@ -1479,30 +1479,35 @@ export default function App() {
   const [lockedContent, setLockedContent] = useState<any[]>([]);
   
   useEffect(() => {
-    fetch(API_URL + '/api/homepage')
-      .then(res => res.json())
-      .then(data => setCurrentPage(data));
-      
-    fetch(API_URL + '/api/menus')
-      .then(res => res.json())
-      .then(data => {
-        const header = data.find((m: any) => m.name === 'header');
-        const footer = data.find((m: any) => m.name === 'footer');
-        if (header) setHeaderMenu(header);
-        if (footer) setFooterMenu(footer);
-      });
+    const safeFetch = async (url: string, setter: (data: any) => void) => {
+      try {
+        const res = await fetch(url);
+        if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+          const data = await res.json();
+          setter(data);
+        }
+      } catch (err) {
+        console.error(`Failed to fetch ${url}`, err);
+      }
+    };
 
-    fetch(API_URL + '/api/locked-content')
-      .then(res => res.json())
-      .then(data => setLockedContent(data));
+    safeFetch(API_URL + '/api/homepage', setCurrentPage);
     
-    fetch(API_URL + '/api/placements')
-      .then(res => res.json())
-      .then(data => setPlacements(data));
+    fetch(API_URL + '/api/menus')
+      .then(res => res.ok && res.headers.get('content-type')?.includes('application/json') ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data)) {
+          const header = data.find((m: any) => m.name === 'header');
+          const footer = data.find((m: any) => m.name === 'footer');
+          if (header) setHeaderMenu(header);
+          if (footer) setFooterMenu(footer);
+        }
+      })
+      .catch(err => console.error('Failed to fetch menus', err));
 
-    fetch(API_URL + '/api/subscription-plans')
-      .then(res => res.json())
-      .then(data => setSubscriptionPlans(data));
+    safeFetch(API_URL + '/api/locked-content', setLockedContent);
+    safeFetch(API_URL + '/api/placements', setPlacements);
+    safeFetch(API_URL + '/api/subscription-plans', setSubscriptionPlans);
   }, [currentUser]);
   
   const [moduleForm, setModuleForm] = useState({ 
@@ -4506,11 +4511,19 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
   }, []);
 
   const filteredJobs = (placements || []).filter((job: any) => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         job.location.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!job) return false;
+    const matchesSearch = (job.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         (job.company || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (job.location || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = selectedType === 'All' || job.type === selectedType;
-    const matchesDate = !dateFilter || new Date(job.posted_at).toISOString().split('T')[0] === dateFilter;
+    let matchesDate = !dateFilter;
+    if (dateFilter && job.posted_at) {
+      try {
+        matchesDate = new Date(job.posted_at).toISOString().split('T')[0] === dateFilter;
+      } catch (e) {
+        matchesDate = false;
+      }
+    }
     return matchesSearch && matchesType && matchesDate;
   });
 
@@ -4527,7 +4540,7 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
             />
           </div>
           <div className="hidden lg:flex items-center gap-6">
-            {headerMenu?.links.map((link: any, index: number) => (
+            {(headerMenu?.links || []).map((link: any, index: number) => (
               <button 
                 key={link._id || link.url || index}
                 onClick={() => {
@@ -4538,13 +4551,14 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
                     else if (slug === 'jobs') setView('jobs');
                     else {
                       fetch(API_URL + `/api/pages/${slug}`)
-                        .then(res => res.json())
+                        .then(res => res.ok ? res.json() : null)
                         .then(data => {
                           if (data) {
                             setDynamicPage(data);
                             setView('dynamic');
                           }
-                        });
+                        })
+                        .catch(err => console.error('Failed to fetch dynamic page', err));
                     }
                   } else {
                     window.open(link.url, '_blank');
@@ -4625,7 +4639,7 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
         <div>
           <h4 className="text-lg font-black text-slate-900 mb-6">Quick Links</h4>
           <ul className="space-y-4">
-            {footerMenu?.links.map((link: any, index: number) => (
+            {(footerMenu?.links || []).map((link: any, index: number) => (
               <li key={index}>
                 <button 
                   onClick={() => {
@@ -4636,13 +4650,14 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
                       else if (slug === 'jobs') setView('jobs');
                       else {
                         fetch(API_URL + `/api/pages/${slug}`)
-                          .then(res => res.json())
+                          .then(res => res.ok ? res.json() : null)
                           .then(data => {
                             if (data) {
                               setDynamicPage(data);
                               setView('dynamic');
                             }
-                          });
+                          })
+                          .catch(err => console.error('Failed to fetch dynamic page', err));
                       }
                     } else {
                       window.open(link.url, '_blank');
@@ -4748,11 +4763,11 @@ function LandingPage({ courses, placements, stats, onLogin, onRegister, onEnroll
               <div key={job._id} className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-indigo-600 font-black text-2xl border border-slate-100">
-                    {job.company.charAt(0)}
+                    {(job.company || 'C').charAt(0)}
                   </div>
                   <div>
-                    <h3 className="font-bold text-xl text-slate-800 group-hover:text-indigo-600 transition-colors">{job.title}</h3>
-                    <p className="text-slate-500 font-medium">{job.company}</p>
+                    <h3 className="font-bold text-xl text-slate-800 group-hover:text-indigo-600 transition-colors">{job.title || 'Untitled Job'}</h3>
+                    <p className="text-slate-500 font-medium">{job.company || 'Unknown Company'}</p>
                   </div>
                 </div>
                 <div className="space-y-3 mb-8">
